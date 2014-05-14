@@ -13,6 +13,8 @@ URL:		http://dbus.freedesktop.org/releases/dbus-python/
 Source0:	%{name}-%{version}.tar.gz
 
 BuildRequires:	%{python_version}-devel
+BuildRequires:	pkgconfig(dbus-1)
+BuildRequires:	pkgconfig(dbus-glib-1)
 Requires:	%{python_version}-base
 
 %description
