@@ -10,7 +10,7 @@ Summary:	D-Bus Python bindings (for Python 3)
 Group:		System Environment/Libraries
 License:	MIT
 URL:		http://dbus.freedesktop.org/releases/dbus-python/
-Source0:	%{url}%{upstream_name}-%{version}.tar.gz
+Source0:	%{name}-%{version}.tar.gz
 
 BuildRequires:	%{python_version}-devel
 Requires:	%{python_version}-base
