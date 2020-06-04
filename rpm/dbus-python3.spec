@@ -1,60 +1,78 @@
-%define upstream_name dbus-python
-%define source_subtree %{upstream_name}-%{version}
-%define python_version python3
-
-Name:		dbus-%{python_version}
-Version:	1.2.0
+Name:		dbus-python3
+Version:	1.2.16
 Release:	1
 Summary:	D-Bus Python bindings (for Python 3)
-
-Group:		System Environment/Libraries
 License:	MIT
-URL:		http://dbus.freedesktop.org/releases/dbus-python/
+URL:		http://www.freedesktop.org/wiki/Software/DBusBindings/
 Source0:	%{name}-%{version}.tar.gz
 
-BuildRequires:	%{python_version}-devel
+# Apply patches to dbus-python/ and then in ./dbus-python use:
+#  git format-patch --base=<upstream-tag> <upstream-tag>..<sfos/tag> -o ../rpm/
+# this set is:
+#  git format-patch --base=dbus-python-1.2.16 dbus-python-1.2.16..jolla/dbus-python-1.2.16 -o ../rpm/
+# borrow centos7 patch to use sitearch properly
+Patch0: 0001-Move-python-modules-to-architecture-specific-directo.patch
+# https://bugzilla.redhat.com/show_bug.cgi?id=1788491
+Patch1: 0002-Python3.9-changes-from-Redhat.patch
+
 BuildRequires:	pkgconfig(dbus-1)
 BuildRequires:	pkgconfig(dbus-glib-1)
-Requires:	%{python_version}-base
+BuildRequires:  python3-devel
+BuildRequires:  python3-setuptools
+Requires:       python3-base
+
+# for %%check
+BuildRequires:  python3-gobject
+# autoreconf and friends
+BuildRequires:  autoconf-archive automake libtool
 
 %description
+D-Bus python bindings for use with python programs.
+
+%package -n python3-dbus
+Summary: D-Bus bindings for python3
+Provides: dbus-python3
+%{?python_provide:%python_provide python3-dbus}
+
+%description -n python3-dbus
 %{summary}.
+
 
 %package devel
-Summary:        D-Bus Python bindings (for Python 3, development headers)
-Requires:       %{name} = %{version}
-
+Summary: Libraries and headers for dbus-python
 %description devel
-%{summary}.
+Headers and static libraries for hooking up custom mainloops to the dbus python
+bindings.
 
 %prep
-%setup -q
+%autosetup -p1 -n %{name}-%{version}/dbus-python
+autoreconf -vif
 
 %build
-cd %{source_subtree}
-# Make sure it builds against the right Python version
-%configure PYTHON=%{python_version}
-make %{?_smp_mflags}
+%py3_build
+%configure PYTHON="%{__python3}"
+%make_build
 
 %install
-rm -rf $RPM_BUILD_ROOT
-cd %{upstream_name}-%{version}
-make install DESTDIR=$RPM_BUILD_ROOT
+%py3_install
+%make_install
 
-# Remove .la files
-find $RPM_BUILD_ROOT -name '*.la' -exec rm {} +
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+# unpackaged files
+rm -fv  $RPM_BUILD_ROOT%{python3_sitearch}/*.la
+rm -rfv $RPM_BUILD_ROOT%{_datadir}/doc/dbus-python/
 
-%files
-%defattr(-,root,root,-)
-%{_libdir}/%{python_version}.*/site-packages/_dbus_bindings.so
-%{_libdir}/%{python_version}.*/site-packages/_dbus_glib_bindings.so
-%{_libdir}/%{python_version}.*/site-packages/dbus
-%{_datadir}/doc/%{upstream_name}
+%check
+make check -k || (cat test-suite.log && false)
+
+%files -n python3-dbus
+%doc NEWS
+%license COPYING
+%{python3_sitearch}/*.so
+%{python3_sitearch}/dbus/
+%{python3_sitearch}/dbus_python*egg-info
 
 %files devel
-%defattr(-,root,root,-)
-%{_includedir}/dbus-1.0/dbus/%{upstream_name}.h
-%{_libdir}/pkgconfig/%{upstream_name}.pc
+%doc README ChangeLog doc/API_CHANGES.txt doc/tutorial.txt
+%{_includedir}/dbus-1.0/dbus/dbus-python.h
+%{_libdir}/pkgconfig/dbus-python.pc
