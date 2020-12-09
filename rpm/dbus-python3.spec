@@ -16,6 +16,7 @@ Patch0: 0001-Move-python-modules-to-architecture-specific-directo.patch
 Patch1: 0002-Python3.9-changes-from-Redhat.patch
 
 BuildRequires:	pkgconfig(dbus-1)
+BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  python3-devel
 BuildRequires:  python3-setuptools
 Requires:       python3-base
