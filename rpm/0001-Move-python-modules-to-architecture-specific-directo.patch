@@ -1,7 +1,7 @@
-From aa8642b451f41ed77f96afa4e1ea0f28e13b80fe Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: leigh123linux <leigh123linux@googlemail.com>
 Date: Tue, 23 Feb 2016 07:32:08 +0000
-Subject: [PATCH 1/2] Move python modules to architecture-specific directory
+Subject: [PATCH] Move python modules to architecture-specific directory
 
 This is because dbus-python gets dragged in as a dependency of other
 things people want to be multilib-compatible.  As is the Python
@@ -11,10 +11,10 @@ modules conflict.
  1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 5780cce..70e6f97 100644
+index fb5390f19bf8fb56401d9f7f2ab71909c238ab27..a7d9624eb5084e490b52b86ef611f1de8fb8056b 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -155,7 +155,8 @@ test_dbus_py_test_la_SOURCES = \
+@@ -156,7 +156,8 @@ test_dbus_py_test_la_SOURCES = \
  
  # === dbus package ===
  
@@ -24,7 +24,7 @@ index 5780cce..70e6f97 100644
      dbus/bus.py \
      dbus/connection.py \
      dbus/_compat.py \
-@@ -175,12 +176,12 @@ nobase_python_PYTHON = \
+@@ -176,12 +177,12 @@ nobase_python_PYTHON = \
      dbus/types.py
  
  if !HAVE_PYTHON_3
@@ -39,7 +39,7 @@ index 5780cce..70e6f97 100644
  include $(top_srcdir)/tools/check-coding-style.mk
  
  # === Devel stuff ===
-@@ -418,7 +419,7 @@ uninstall-local-pycache:
+@@ -419,7 +420,7 @@ uninstall-local-pycache:
  if ENABLE_DOCUMENTATION
  all: doc/_build/.stamp
  
@@ -48,8 +48,3 @@ index 5780cce..70e6f97 100644
  			_dbus_bindings.la \
  			_dbus_glib_bindings.la \
  			$(sphinx_sources) \
-
-base-commit: 39b3099e1409118c6cf1260e8966d448cb16a93e
--- 
-2.20.1
-
