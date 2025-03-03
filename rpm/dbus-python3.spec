@@ -1,5 +1,5 @@
 Name:		dbus-python3
-Version:	1.2.16
+Version:	1.2.18
 Release:	1
 Summary:	D-Bus Python bindings (for Python 3)
 License:	MIT
@@ -12,8 +12,6 @@ Source0:	%{name}-%{version}.tar.gz
 #  git format-patch --base=dbus-python-1.2.16 dbus-python-1.2.16..jolla/dbus-python-1.2.16 -o ../rpm/
 # borrow centos7 patch to use sitearch properly
 Patch0: 0001-Move-python-modules-to-architecture-specific-directo.patch
-# https://bugzilla.redhat.com/show_bug.cgi?id=1788491
-Patch1: 0002-Python3.9-changes-from-Redhat.patch
 
 BuildRequires:	pkgconfig(dbus-1)
 BuildRequires:  pkgconfig(glib-2.0)
